@@ -299,12 +299,8 @@ class APNSServer(xmlrpc.XMLRPC):
         # that are made unsuccessfully, which twisted will try endlessly
         # to reconnect to, we timeout and notifify the client
         raise xmlrpc.Fault(500, 'Connection to the APNS server could not be made.')
-      ret = d.addCallbacks(lambda r: None, _finish_err)
-      if ret is None:
-          return 0
-      else:
-          return ret
-   return 0
+      return d.addCallbacks(lambda r: 0, _finish_err)
+    return 0
   
   def xmlrpc_feedback(self, app_id):
     """ Queries the Apple APNS feedback server for inactive app tokens. Returns

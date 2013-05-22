@@ -119,7 +119,7 @@ def _xmlrpc_thread(method, args, callback, errback=None):
     parts = method.strip().split('.')
     for part in parts:
       proxy = getattr(proxy, part)
-    return callback(proxy(*args))
+    return callback(proxy, proxy(*args))
   except xmlrpclib.Fault, e:
     if e.faultCode == 404:
       e = UnknownAppID()

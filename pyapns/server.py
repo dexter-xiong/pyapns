@@ -328,6 +328,14 @@ def encode_notifications(tokens, notifications):
   binaryify = lambda t: t.decode('hex')
   if type(notifications) is dict and type(tokens) in (str, unicode):
     tokens, notifications = ([tokens], [notifications])
+  for notification in notifications:
+      alert = notification["aps"]["alert"]
+      alert_ords = [ord(i) for i in alert]
+      if max(alert_ords) > 256:
+          new_alert = "".join(unichr(i) for i in alert_ords)
+      else:
+          new_alert = "".join(chr(i) for i in alert_ords).decode("utf-8")
+      notification["aps"]["alert"] = alert
   if type(notifications) is list and type(tokens) is list:
     return ''.join(map(lambda y: structify(*y), ((binaryify(t), json.dumps(p, separators=(',',':'), ensure_ascii=False).encode('utf-8'))
                                     for t, p in zip(tokens, notifications))))
